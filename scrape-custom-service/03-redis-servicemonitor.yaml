@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: redis-cart
+spec:
+  endpoints:
+    - interval: 30s
+      scrapeTimeout: 20s
+      path: "/metrics"
+      targetPort: metrics
+  namespaceSelector:
+    matchNames:
+      - default
+  selector:
+    matchLabels:
+      app: redis-cart

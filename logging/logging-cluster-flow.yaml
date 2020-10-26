@@ -1,0 +1,22 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterOutput
+metadata:
+  name: loki
+  namespace: cattle-logging-system
+spec:
+  loki:
+    url: http://loki.loki:3100
+    configure_kubernetes_labels: true
+    buffer:
+      timekey: 5s
+      timekey_wait: 5s
+      timekey_use_utc: true
+---
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: ClusterFlow
+metadata:
+  name: all-logs-to-loki
+  namespace: cattle-logging-system
+spec:
+  globalOutputRefs:
+    - loki
