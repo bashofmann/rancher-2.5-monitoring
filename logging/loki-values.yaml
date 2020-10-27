@@ -8,9 +8,9 @@ serviceMonitor:
   enabled: true
 resources:
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 400m
+    memory: 1024Mi
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 512Mi
 
