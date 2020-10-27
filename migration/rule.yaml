@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: custom-rules
+  namespace: default
+spec:
+  groups:
+    - name: custom.rules
+      rules:
+        - alert:
+          expr:
+          for:
+          labels:
+            severity:
+          annotations:
+            summary:
