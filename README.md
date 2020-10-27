@@ -19,6 +19,8 @@ Go to https://rancher-demo.plgrnd.be/login and set up admin password and server 
 * In the local cluster, go to Cluster Explorer -> Apps & Marketplace.
 * Install the rancher-monitoring app with the default settings
 
+! NOTE: On Rancher <2.5.2, install from dev-v2.5 branch, enable k3s in yaml, increase memory limit to 3500Mi
+
 ## Explore rancher-monitoring
 
 * See the helm install output
@@ -66,6 +68,8 @@ kubectl apply -f scrape-custom-service/04-redis-grafana-dashboard.yaml
 kubectl -n default apply -f scrape-custom-service/05-redis-prometheus-rules.yaml
 ```
 
+* Configure alertmanager
+
 * Force alert
 
 ```
@@ -92,7 +96,15 @@ Add db
 kubectl apply -f scrape-custom-service/06-mysql-cluster.yaml
 ```
 
+Add rules and dashboard
+
+```
+kubectl apply -f scrape-custom-service/07-mysql-rules.yaml
+kubectl apply -f scrape-custom-service/08-mysql-grafana-dashboard.yaml
+```
+
 ## Logging
+
 * Install rancher-logging
 
 * Install loki
@@ -116,13 +128,6 @@ kubectl apply -f logging/logging-cluster-flow.yaml
 
 Wait a bit and show logs in Grafana Explorer for `{namespace="default"}`
 
-## V1 to V2 migration
-
-* Notifiers
-* Dashboards
-* Non Prometheus Query Alerts
-* Prometheus Query Alerts
-
 ## HPA
 
 * Deploy sample app
@@ -142,4 +147,31 @@ Create load at https://sample-app.plgrnd.be/
 ```
 watch kubectl describe hpa -n default
 watch kubectl get pods -n default
+```
+
+## V1 to V2 migration
+
+* Notifiers
+* Dashboards
+* Non Prometheus Query Alerts
+* Prometheus Query Alerts
+
+
+```
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: custom-rules
+  namespace: default
+spec:
+  groups:
+    - name: custom.rules
+      rules:
+        - alert: Deployment with unavailable replicas
+          expr: kube_deployment_status_replicas_unavailable > 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Deployment {{ $labels.namespace }}/{{ $labels.deployment }} has {{ $value }} unavailable replicas"
 ```
