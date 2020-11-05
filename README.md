@@ -175,3 +175,11 @@ spec:
           annotations:
             summary: "Deployment {{ $labels.namespace }}/{{ $labels.deployment }} has {{ $value }} unavailable replicas"
 ```
+
+## Istio
+
+```
+kubectl label namespace default istio-injection=enabled
+```
+
+Redeploy everything
