@@ -705,7 +705,7 @@ metadata:
   name: demo-shop
 spec:
   rules:
-    - host: demo-shop.plgrnd.be
+    - host: sslip.io
       http:
         paths:
           - path: /
